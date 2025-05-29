@@ -1,23 +1,29 @@
 ﻿using ServiceContracts.DTO;
 
-namespace ServiceContracts
+namespace ServiceContracts;
+
+/// <summary>
+///     Inrterface for the CountriesService class representing the buisiness logic layer for country-related operations.
+/// </summary>
+public interface ICountriesService
 {
     /// <summary>
-    /// Inrterface for the CountriesService class representing the buisiness logic layer for country-related operations.
+    ///     Adds a country object to the list of countries.
     /// </summary>
-    public interface ICountriesService
-    {
-        /// <summary>
-        /// Adds a country object to the list of countries.
-        /// </summary>
-        /// <param name="countryAddRequest">Country object to add</param>
-        /// <returns>Returns the country object after adding it</returns>
-        CountryResponse AddCountry(CountryAddRequest? countryAddRequest);
-        
-        /// <summary>
-        /// Returns all countries from the list
-        /// </summary>
-        /// <returns>All countries</returns>
-        List<CountryResponse> GetAllCountries();
-    }
+    /// <param name="countryAddRequest">Country object to add</param>
+    /// <returns>Returns the country object after adding it</returns>
+    CountryResponse AddCountry(CountryAddRequest? countryAddRequest);
+
+    /// <summary>
+    ///     Returns all countries from the list
+    /// </summary>
+    /// <returns>All countries</returns>
+    List<CountryResponse> GetAllCountries();
+    
+    /// <summary>
+    /// Returns country object basen on the given country id
+    /// </summary>
+    /// <param name="countryId">CountryID (Guid)</param>
+    /// <returns>Matching country as CountryResponse object</returns>
+    CountryResponse? GetCountryById(Guid? countryId);
 }
