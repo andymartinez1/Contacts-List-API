@@ -36,7 +36,7 @@ public class CountriesServiceTest
     {
         // Arrange
         var request = new CountryAddRequest
-            { CountryName = null };
+        { CountryName = null };
 
         // Assert
         Assert.Throws<ArgumentException>(() =>
@@ -52,9 +52,9 @@ public class CountriesServiceTest
     {
         // Arrange
         var request1 = new CountryAddRequest
-            { CountryName = "USA" };
+        { CountryName = "USA" };
         var request2 = new CountryAddRequest
-            { CountryName = "USA" };
+        { CountryName = "USA" };
 
         // Assert
         Assert.Throws<ArgumentException>(() =>
@@ -71,7 +71,7 @@ public class CountriesServiceTest
     {
         // Arrange
         var request = new CountryAddRequest
-            { CountryName = "Japan" };
+        { CountryName = "Japan" };
 
 
         // Act
