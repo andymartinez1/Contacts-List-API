@@ -22,6 +22,14 @@ public interface IPersonsService
     PersonResponse? GetPersonByPersonId(Guid? personID);
 
     /// <summary>
+    /// Returns a list of persons filtered by the specified search criteria.
+    /// </summary>
+    /// <param name="searchBy">Search field</param>
+    /// <param name="searchString">Search string</param>
+    /// <returns>Returns all matching persons</returns>
+    List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
+
+    /// <summary>
     /// Returns all persons in the system.
     /// </summary>
     /// <returns>List of persons of PersonResponse object typs</returns>

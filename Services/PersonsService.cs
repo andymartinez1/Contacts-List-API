@@ -63,6 +63,42 @@ public class PersonsService : IPersonsService
         return person.ToPersonResponse();
     }
 
+    public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
+    {
+        List<PersonResponse> allPersons = GetAllPersons();
+        List<PersonResponse> matchingPersons = allPersons;
+
+        if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
+            return matchingPersons;
+
+        switch (searchBy)
+        {
+            case nameof(Person.PersonName):
+                matchingPersons = allPersons
+                    .Where(pr =>
+                        (
+                            string.IsNullOrEmpty(pr.PersonName)
+                            || pr.PersonName.Contains(
+                                searchString,
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        )
+                    )
+                    .ToList();
+                break;
+            case nameof(Person.Email):
+                matchingPersons = allPersons
+                    .Where(pr =>
+                        (
+                            string.IsNullOrEmpty(pr.Email)
+                            || pr.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                        )
+                    )
+                    .ToList();
+                break;
+        }
+    }
+
     public List<PersonResponse> GetAllPersons()
     {
         return _persons.Select(p => p.ToPersonResponse()).ToList();
