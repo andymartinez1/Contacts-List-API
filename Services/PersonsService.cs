@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 using Services.Helpers;
 
 namespace Services;
@@ -75,10 +76,10 @@ public class PersonsService : IPersonsService
         {
             case nameof(Person.PersonName):
                 matchingPersons = allPersons
-                    .Where(pr =>
+                    .Where(temp =>
                         (
-                            string.IsNullOrEmpty(pr.PersonName)
-                            || pr.PersonName.Contains(
+                            string.IsNullOrEmpty(temp.PersonName)
+                            || temp.PersonName.Contains(
                                 searchString,
                                 StringComparison.OrdinalIgnoreCase
                             )
@@ -86,21 +87,177 @@ public class PersonsService : IPersonsService
                     )
                     .ToList();
                 break;
+
             case nameof(Person.Email):
                 matchingPersons = allPersons
-                    .Where(pr =>
+                    .Where(temp =>
                         (
-                            string.IsNullOrEmpty(pr.Email)
-                            || pr.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                            string.IsNullOrEmpty(temp.Email)
+                            || temp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)
                         )
                     )
                     .ToList();
                 break;
+
+            case nameof(Person.DateOfBirth):
+                matchingPersons = allPersons
+                    .Where(temp =>
+                        (temp.DateOfBirth == null)
+                        || temp.DateOfBirth.Value.ToString("MM-dd-yyyy")
+                            .Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+                break;
+
+            case nameof(Person.Gender):
+                matchingPersons = allPersons
+                    .Where(temp =>
+                        (
+                            string.IsNullOrEmpty(temp.Gender)
+                            || temp.Gender.Contains(
+                                searchString,
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        )
+                    )
+                    .ToList();
+                break;
+
+            case nameof(Person.CountryID):
+                matchingPersons = allPersons
+                    .Where(temp =>
+                        (
+                            string.IsNullOrEmpty(temp.Country)
+                            || temp.Country.Contains(
+                                searchString,
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        )
+                    )
+                    .ToList();
+                break;
+
+            case nameof(Person.Address):
+                matchingPersons = allPersons
+                    .Where(temp =>
+                        (
+                            string.IsNullOrEmpty(temp.Address)
+                            || temp.Address.Contains(
+                                searchString,
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        )
+                    )
+                    .ToList();
+                break;
+
+            default:
+                matchingPersons = allPersons;
+                break;
         }
+
+        return matchingPersons;
+    }
+
+    public List<PersonResponse> GetSortedPersons(
+        List<PersonResponse> allPersons,
+        string sortBy,
+        SortOrderOptions sortOrder
+    )
+    {
+        if (string.IsNullOrEmpty(sortBy))
+            return allPersons;
+
+        List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
+        {
+            (nameof(PersonResponse.PersonName), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.PersonName, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.PersonName), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.PersonName, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Email), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Email, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Email), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Email, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.DateOfBirth), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.DateOfBirth)
+                .ToList(),
+            (nameof(PersonResponse.DateOfBirth), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.DateOfBirth)
+                .ToList(),
+            (nameof(PersonResponse.Age), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Age)
+                .ToList(),
+            (nameof(PersonResponse.Age), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Age)
+                .ToList(),
+            (nameof(PersonResponse.Gender), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Gender, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Gender), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Gender, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Country), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Country, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Country), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Country, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Address), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.Address), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            (nameof(PersonResponse.ReceiveNewsletter), SortOrderOptions.ASC) => allPersons
+                .OrderBy(pr => pr.Address)
+                .ToList(),
+            (nameof(PersonResponse.ReceiveNewsletter), SortOrderOptions.DESC) => allPersons
+                .OrderByDescending(pr => pr.Address)
+                .ToList(),
+            _ => allPersons,
+        };
+        return sortedPersons;
     }
 
     public List<PersonResponse> GetAllPersons()
     {
         return _persons.Select(p => p.ToPersonResponse()).ToList();
+    }
+
+    public PersonResponse UpdatePerson(PersonUpdateRequest personUpdateRequest)
+    {
+        if (personUpdateRequest == null)
+            throw new ArgumentNullException(nameof(personUpdateRequest));
+
+        // Validate the personUpdateRequest using Model Validation helper
+        ValidationHelper.ModelValidation(personUpdateRequest);
+
+        // Find the person by PersonId
+        Person? matchingPerson = _persons.FirstOrDefault(p =>
+            p.PersonId == personUpdateRequest.PersonId
+        );
+
+        if (matchingPerson == null)
+        {
+            throw new ArgumentException(
+                $"Person with ID {personUpdateRequest.PersonId} does not exist."
+            );
+        }
+
+        // Update the matching person's details
+        matchingPerson.PersonName = personUpdateRequest.PersonName;
+        matchingPerson.Email = personUpdateRequest.Email;
+        matchingPerson.DateOfBirth = personUpdateRequest.DateOfBirth;
+        matchingPerson.Gender = personUpdateRequest.Gender.ToString();
+        matchingPerson.CountryID = personUpdateRequest.CountryID;
+        matchingPerson.Address = personUpdateRequest.Address;
+        matchingPerson.ReceiveNewsletter = personUpdateRequest.ReceiveNewsletter;
+
+        // Convert the updated person to PersonResponse and return
+        return matchingPerson.ToPersonResponse();
     }
 }

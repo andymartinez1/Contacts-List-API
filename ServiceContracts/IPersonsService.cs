@@ -1,4 +1,5 @@
 ﻿using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts;
 
@@ -30,8 +31,28 @@ public interface IPersonsService
     List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
 
     /// <summary>
+    /// Returns a list of persons sorted by the specified field and order.
+    /// </summary>
+    /// <param name="allPersons">List of persons to sort</param>
+    /// <param name="sortBy">Sort criteria</param>
+    /// <param name="sortOrder">Ascending or descending</param>
+    /// <returns>Sorted list of all persons</returns>
+    List<PersonResponse> GetSortedPersons(
+        List<PersonResponse> allPersons,
+        string sortBy,
+        SortOrderOptions sortOrder
+    );
+
+    /// <summary>
     /// Returns all persons in the system.
     /// </summary>
     /// <returns>List of persons of PersonResponse object typs</returns>
     List<PersonResponse> GetAllPersons();
+
+    /// <summary>
+    /// Updates an existing person's details.
+    /// </summary>
+    /// <param name="personUpdateRequest"></param>
+    /// <returns>Updated person response object</returns>
+    PersonResponse UpdatePerson(PersonUpdateRequest personUpdateRequest);
 }
