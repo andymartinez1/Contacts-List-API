@@ -260,4 +260,23 @@ public class PersonsService : IPersonsService
         // Convert the updated person to PersonResponse and return
         return matchingPerson.ToPersonResponse();
     }
+
+    public bool DeletePerson(Guid? personID)
+    {
+        if (personID == null)
+        {
+            throw new ArgumentNullException(nameof(personID));
+        }
+
+        // Find the person by PersonId
+        Person? matchingPerson = _persons.FirstOrDefault(p => p.PersonId == personID);
+
+        if (matchingPerson == null)
+            return false;
+
+        // Remove the person from the list
+        _persons.Remove(matchingPerson);
+
+        return true;
+    }
 }
