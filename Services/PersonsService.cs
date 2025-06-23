@@ -11,10 +11,74 @@ public class PersonsService : IPersonsService
     private readonly List<Person> _persons;
     private readonly ICountriesService _countriesService;
 
-    public PersonsService()
+    public PersonsService(bool initializePersons = true)
     {
         _persons = new List<Person>();
         _countriesService = new CountriesService();
+        if (initializePersons)
+        {
+            // Initialize with some default persons
+            _persons.AddRange(
+                new List<Person>()
+                {
+                    new Person
+                    {
+                        PersonId = Guid.Parse("75227058-0432-4844-B037-DB2E422B2C30"),
+                        PersonName = "Ive",
+                        Email = "imacswayde0@tamu.edu",
+                        Address = "79 Dottie Plaza",
+                        CountryID = Guid.Parse("4A656578-3623-4A33-977B-62969CBD4056"),
+                        DateOfBirth = DateTime.Parse("06/04/2012"),
+                        Gender = "Male",
+                        ReceiveNewsletter = true,
+                    },
+                    new Person
+                    {
+                        PersonId = Guid.Parse("D6DACD8D-A886-4C26-8596-D086172BB2FF"),
+                        PersonName = "Cal",
+                        Email = "cmckomb1@miitbeian.gov",
+                        Address = "926 Jackson Drive",
+                        CountryID = Guid.Parse("E1230C55-DD31-4385-86CB-AA83A1B091F5"),
+                        DateOfBirth = DateTime.Parse("10/17/2009"),
+                        Gender = "Female",
+                        ReceiveNewsletter = false,
+                    },
+                    new Person
+                    {
+                        PersonId = Guid.Parse("EBBFE40A-2BF4-4EDC-B02C-CEF1E9B3B64D"),
+                        PersonName = "Rodolphe",
+                        Email = "rbasil2@weather.com",
+                        Address = "926 Jackson Drive",
+                        CountryID = Guid.Parse("3534980C-3DED-49F7-BE69-F91BDEF89BA1"),
+                        DateOfBirth = DateTime.Parse("03/07/2000"),
+                        Gender = "Other",
+                        ReceiveNewsletter = false,
+                    },
+                    new Person
+                    {
+                        PersonId = Guid.Parse("FE20B6A0-DC50-4E3A-8FB5-DDDB0CF5EEC5"),
+                        PersonName = "Harry",
+                        Email = "hdurtnal3@accuweather.com",
+                        Address = "45631 Sycamore Place",
+                        CountryID = Guid.Parse("AB33587A-1FC6-4FE2-BBFC-23E18694631B"),
+                        DateOfBirth = DateTime.Parse("08/23/2002"),
+                        Gender = "Male",
+                        ReceiveNewsletter = true,
+                    },
+                    new Person
+                    {
+                        PersonId = Guid.Parse("27546559-51AE-4816-899E-FBCB3D76CE89"),
+                        PersonName = "Sunshine",
+                        Email = "srude6@cisco.com",
+                        Address = "5 Ruskin Point",
+                        CountryID = Guid.Parse("32A5FD37-80E7-4DDE-AF12-749C20E1E7E6"),
+                        DateOfBirth = DateTime.Parse("04/10/1998"),
+                        Gender = "Female",
+                        ReceiveNewsletter = true,
+                    },
+                }
+            );
+        }
     }
 
     private PersonResponse ConvertPersonToPersonResponse(Person person)

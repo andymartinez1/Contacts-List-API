@@ -17,7 +17,7 @@ public class PersonsServiceTest
     {
         // Initialize the services
         _personsService = new PersonsService();
-        _countriesService = new CountriesService();
+        _countriesService = new CountriesService(false);
         _testOutputHelper = testOutputHelper;
     }
 

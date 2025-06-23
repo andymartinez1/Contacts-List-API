@@ -10,7 +10,7 @@ public class CountriesServiceTest
 
     public CountriesServiceTest()
     {
-        _countriesService = new CountriesService();
+        _countriesService = new CountriesService(false);
     }
 
     #region AddCountry
@@ -35,8 +35,7 @@ public class CountriesServiceTest
     public void AddCountry_CountryNameIsNull()
     {
         // Arrange
-        var request = new CountryAddRequest
-        { CountryName = null };
+        var request = new CountryAddRequest { CountryName = null };
 
         // Assert
         Assert.Throws<ArgumentException>(() =>
@@ -51,10 +50,8 @@ public class CountriesServiceTest
     public void AddCountry_DuplicateCountryName()
     {
         // Arrange
-        var request1 = new CountryAddRequest
-        { CountryName = "USA" };
-        var request2 = new CountryAddRequest
-        { CountryName = "USA" };
+        var request1 = new CountryAddRequest { CountryName = "USA" };
+        var request2 = new CountryAddRequest { CountryName = "USA" };
 
         // Assert
         Assert.Throws<ArgumentException>(() =>
@@ -70,9 +67,7 @@ public class CountriesServiceTest
     public void AddCountry_ProperCountryDetails()
     {
         // Arrange
-        var request = new CountryAddRequest
-        { CountryName = "Japan" };
-
+        var request = new CountryAddRequest { CountryName = "Japan" };
 
         // Act
         var response = _countriesService.AddCountry(request);
@@ -105,14 +100,13 @@ public class CountriesServiceTest
         var country_request_list = new List<CountryAddRequest>
         {
             new() { CountryName = "USA" },
-            new() { CountryName = "Japan" }
+            new() { CountryName = "Japan" },
         };
 
         // Act
         var country_list_from_add_country = new List<CountryResponse>();
         foreach (var country_request in country_request_list)
-            country_list_from_add_country.Add(
-                _countriesService.AddCountry(country_request));
+            country_list_from_add_country.Add(_countriesService.AddCountry(country_request));
 
         var actualCountryResponseList = _countriesService.GetAllCountries();
 
@@ -133,7 +127,9 @@ public class CountriesServiceTest
         Guid? countryId = null;
 
         // Act
-        CountryResponse? country_response_from_get_method = _countriesService.GetCountryById(countryId);
+        CountryResponse? country_response_from_get_method = _countriesService.GetCountryById(
+            countryId
+        );
 
         // Assert
         Assert.Null(country_response_from_get_method);
@@ -144,15 +140,15 @@ public class CountriesServiceTest
     public void GetCountryById_ValidCountryId()
     {
         // Arrange
-        CountryAddRequest? country_add_request = new CountryAddRequest()
-        {
-            CountryName = "China"
-        };
-        CountryResponse country_response_from_add = _countriesService.AddCountry(country_add_request);
+        CountryAddRequest? country_add_request = new CountryAddRequest() { CountryName = "China" };
+        CountryResponse country_response_from_add = _countriesService.AddCountry(
+            country_add_request
+        );
 
         // Act
-        CountryResponse? country_response_from_get =
-            _countriesService.GetCountryById(country_response_from_add.CountryID);
+        CountryResponse? country_response_from_get = _countriesService.GetCountryById(
+            country_response_from_add.CountryID
+        );
 
         // Assert
         Assert.Equal(country_response_from_add, country_response_from_get);

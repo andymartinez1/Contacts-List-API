@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ServiceContracts.DTO.PersonResponse>
+
+@{
+    ViewBag.Title = "Contacts List";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Contacts</title>
+</head>
+<body>
+<div>
+    <h1>Contacts</h1>
+
+    <form action="~/contacts/index" method="get" class="flex mb">
+
+        <div class="box flex w-100">
+            <div class="flex-1">
+                <select class="form-input" name="searchBy">
+                    @foreach (var field in ViewBag.SearchFields)
+                    {
+                        <option value="@field.Key">@field.Value</option>
+                    }
+                </select>
+            </div>
+
+            <div class="flex-1">
+                <input type="search" id="search" class="form-input" placeholder="Search" name="searchString"/>
+            </div>
+
+            <div class="flex-1">
+                <button class="button button-blue-back">Search</button>
+                <a href="~/contacts/index" class="link-hover">Clear All</a>
+            </div>
+        </div>
+
+    </form>
+
+    <table class="table w-100 mt">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Date of Birth</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Country</th>
+            <th>Address</th>
+            <th>Receive News Letters</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.PersonName</td>
+                <td>@person.Email</td>
+                <td>@person.DateOfBirth?.ToString("MM/dd/yyyy")</td>
+                <td>@person.Age</td>
+                <td>@person.Gender</td>
+                <td>@person.Country</td>
+                <td>@person.Address</td>
+                <td>@person.ReceiveNewsletter</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
